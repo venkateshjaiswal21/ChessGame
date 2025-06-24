@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(8, minmax(0, 1fr));
+            width: 400px;
+            height: 400px;
+        }
+        .piece.white {
+            color: white;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
+        }
+        .piece.black {
+            color: black;
+        }
+        .flipped {
+            transform: rotate(180deg);
+        }
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .square.light {
+            background-color: #f0d9b5;
+        }
+        .square.dark {
+            background-color: #b58863;
+        }
+        .piece {
+            font-size: 36px;
+            cursor: pointer;
+        }
+        .piece.draggable {
+            cursor: grab;
+        }
+        .dragging {
+            opacity: 0.5;
+        }
+        /* Rotate pieces for black player */
+        .flipped .piece {
+            transform: rotate(180deg);
+        }
+        .game-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .undo-button, .redo-button, .reset-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+        .undo-button {
+            background-color: #4a5568;
+        }
+        .redo-button {
+            background-color: #38a169;
+        }
+        .reset-button {
+            background-color: #e53e3e;
+        }
+        .undo-button:hover {
+            background-color: #2d3748;
+        }
+        .redo-button:hover {
+            background-color: #2f855a;
+        }
+        .reset-button:hover {
+            background-color: #c53030;
+        }
+        .game-info {
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .game-status {
+            color: #f6e05e;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 10px;
+            min-height: 24px;
+        }
+        .spectator-controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .spectator-nav {
+            display: flex;
+            gap: 8px;
+        }
+        .nav-button {
+            padding: 4px 12px;
+            background-color: #4c51bf;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .nav-button:hover:not(:disabled) {
+            background-color: #434190;
+        }
+        .nav-button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        .move-position {
+            color: white;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div class="w-full h-screen bg-zinc-900 flex flex-col items-center justify-center">
+        <div class="game-info">
+            <div id="player"></div>
+            <div id="moveHistory"></div>
+            <div id="gameStatus" class="game-status"></div>
+        </div>
+        <div class="chessboard w-96 h-96 bg-red-800"></div>
+        
+        <!-- Player Controls -->
+        <div class="game-controls">
+            <button id="undoButton" class="undo-button">Undo Move</button>
+            <button id="redoButton" class="redo-button">Redo Move</button>
+            <button id="resetButton" class="reset-button">Reset Game</button>
+        </div>
+        
+        <!-- Spectator Controls -->
+        <div id="spectatorControls" class="spectator-controls" style="display: none;">
+            <div class="spectator-nav">
+                <button id="prevMoveBtn" class="nav-button">← Prev</button>
+                <button id="nextMoveBtn" class="nav-button">Next →</button>
+                <button id="latestMoveBtn" class="nav-button">Latest</button>
+            </div>
+            <div id="movePosition" class="move-position">Move: 0 / 0</div>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/chessgame.js"></script>
+</body>
+</html>
